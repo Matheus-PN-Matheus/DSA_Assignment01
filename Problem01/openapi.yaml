@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info:
+  title: Lecturer API
+  version: 1.0.0
+  description: API for managing lecturer information within a faculty.
+
+paths:
+  /lecturers:
+    post:
+      summary: Add a new lecturer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lecturer'
+      responses:
+        '201':
+          description: Lecturer added successfully
+        '400':
+          description: Invalid input
+
+    get:
+      summary: Retrieve a list of all lecturers within the faculty
+      responses:
+        '200':
+          description: A list of lecturers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecturer'
+
+  /lecturers/{staffNumber}:
+    get:
+      summary: Retrieve the details of a specific lecturer by their staff number
+      parameters:
+        - name: staffNumber
+          in: path
+          required: true
+          description: Unique staff number of the lecturer
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details of the lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lecturer'
+        '404':
+          description: Lecturer not found
+
+    put:
+      summary: Update an existing lecturer's information
+      parameters:
+        - name: staffNumber
+          in: path
+          required: true
+          description: Unique staff number of the lecturer
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lecturer'
+      responses:
+        '200':
+          description: Lecturer updated successfully
+        '400':
+          description: Invalid input
+        '404':
+          description: Lecturer not found
+
+    delete:
+      summary: Delete a lecturer's record by their staff number
+      parameters:
+        - name: staffNumber
+          in: path
+          required: true
+          description: Unique staff number of the lecturer
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Lecturer deleted successfully
+        '404':
+          description: Lecturer not found
+
+  /lecturers/course/{courseName}:
+    get:
+      summary: Retrieve all the lecturers that teach a certain course
+      parameters:
+        - name: courseName
+          in: path
+          required: true
+          description: Name of the course
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of lecturers teaching the course
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecturer'
+        '404':
+          description: Course not found
+
+  /lecturers/office/{officeNumber}:
+    get:
+      summary: Retrieve all the lecturers that sit in the same office
+      parameters:
+        - name: officeNumber
+          in: path
+          required: true
+          description: Office number
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of lecturers in the same office
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lecturer'
+        '404':
+          description: Office not found
+
+components:
+  schemas:
+    Lecturer:
+      type: object
+      properties:
+        staffNumber:
+          type: string
+          description: Unique staff number of the lecturer
+        name:
+          type: string
+          description: Name of the lecturer
+        courses:
+          type: array
+          items:
+            type: string
+          description: List of courses taught by the lecturer
+        officeNumber:
+          type: string
+          description: Office number where the lecturer sits
+      required:
+        - staffNumber
+        - name
+

@@ -51,6 +51,7 @@ service / on ep0 {
     return http:CREATED;
     }
 
+//The Following code was submitted bt Denver January -- 216013216
 # Retrieve the details of a specific lecturer by their staff number
     #
     # + staffNumber - Unique staff number of the lecturer 
@@ -62,18 +63,14 @@ service / on ep0 {
     // This endpoint retrieves the details of a specific lecturer based on their staff number.
     // Service-side: This endpoint responds to the GET request sent by the client's `get lecturers/[string staffNumber]` method.
     resource function get lecturers/[string staffNumber]() returns Lecturer|http:NotFound {
-<<<<<<< HEAD
 
-        Lecturer? queriedLecturer = lecturersTable[staffNumber];
+    Lecturer? queriedLecturer = lecturersTable[staffNumber];
         if (queriedLecturer is ()) {
             return http:NOT_FOUND;
         } else {
             return queriedLecturer;
         }
     }
-=======
->>>>>>> 2ba0ce9707241bf22c30464344ef4be76c556cf9
-
         Lecturer? queriedLecturer = lecturersTable[staffNumber];
         if (queriedLecturer is ()) {
             return http:NOT_FOUND;

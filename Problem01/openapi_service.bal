@@ -31,7 +31,7 @@ service / on ep0 {
     resource function post lecturers(@http:Payload Lecturer new_Lecturer) returns http:Created|http:BadRequest {
     }
 
-    # Retrieve the details of a specific lecturer by their staff number
+# Retrieve the details of a specific lecturer by their staff number
     #
     # + staffNumber - Unique staff number of the lecturer 
     # + return - returns can be any of following types
@@ -39,11 +39,19 @@ service / on ep0 {
     # http:NotFound (Lecturer not found)
     
 
-
+    // This endpoint retrieves the details of a specific lecturer based on their staff number.
+    // Service-side: This endpoint responds to the GET request sent by the client's `get lecturers/[string staffNumber]` method.
     resource function get lecturers/[string staffNumber]() returns Lecturer|http:NotFound {
-    }
 
+        Lecturer? queriedLecturer = lecturersTable[staffNumber];
+        if (queriedLecturer is ()) {
+            return http:NOT_FOUND;
+        } else {
+            return queriedLecturer;
+        }
+    }
     
+    //The Following code was submitted bt Denver January -- 216013216
     # Update an existing lecturer's information
     #
     # + staffNumber - Unique staff number of the lecturer 
@@ -53,8 +61,28 @@ service / on ep0 {
     # http:BadRequest (Invalid input)
     # http:NotFound (Lecturer not found)
     
-
+    // This endpoint updates an existing lecturer's details.
+    // Service-side: This endpoint responds to the PUT request sent by the client's `put lecturers/[string staffNumber]` method.
     resource function put lecturers/[string staffNumber](@http:Payload Lecturer updatedLecturer) returns http:Response {
+         // First, check if the lecturer with the given staffNumber exists
+    // First, check if the lecturer with the given staffNumber exists
+    if (!lecturersTable.hasKey(staffNumber)) {
+        http:Response notFoundResponse = new;
+        notFoundResponse.statusCode = http:STATUS_NOT_FOUND;
+        notFoundResponse.setPayload("Lecturer not found");
+        return notFoundResponse;
+    }
+
+    // Remove the existing lecturer details from the lecturersTable
+    _ = lecturersTable.remove(staffNumber);
+
+    // Add the updated lecturer details to the lecturersTable
+    lecturersTable.add(updatedLecturer);
+
+    http:Response successResponse = new;
+    successResponse.statusCode = http:STATUS_OK;
+    successResponse.setPayload("Lecturer updated successfully");
+    return successResponse;
         }
 
     

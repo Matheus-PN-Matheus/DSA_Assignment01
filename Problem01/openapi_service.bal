@@ -70,13 +70,7 @@ service / on ep0 {
         } else {
             return queriedLecturer;
         }
-    }
-        Lecturer? queriedLecturer = lecturersTable[staffNumber];
-        if (queriedLecturer is ()) {
-            return http:NOT_FOUND;
-        } else {
-            return queriedLecturer;
-        }
+    
     }
     
     //The Following code was submitted bt Denver January -- 216013216

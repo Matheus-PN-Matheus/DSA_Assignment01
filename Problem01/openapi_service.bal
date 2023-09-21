@@ -122,6 +122,18 @@ service / on ep0 {
     // This endpoint deletes a lecturer based on their staff number.
     // Service-side: This endpoint responds to the DELETE request sent by the client's `delete lecturers/[string staffNumber]` method.
     resource function delete lecturers/[string staffNumber]() returns http:NoContent|http:NotFound|http:Response {
+    // Check if the lecturer with the given staffNumber exists
+    if (!lecturersTable.hasKey(staffNumber)) {
+        // If not found, return an HTTP NotFound response
+        return http:NotFound {message: "Lecturer not found"};
+    }
+
+    // Remove the existing lecturer record from the lecturersTable
+    lecturersTable.remove(staffNumber);
+
+    // Return an HTTP NoContent response to indicate successful deletion
+    return http:NoContent;
+}
 
     // Check if the lecturer with the given staffNumber exists
      if (lecturersTable.hasKey(staffNumber)) {
@@ -148,6 +160,26 @@ service / on ep0 {
     // This endpoint retrieves lecturers teaching a specific course.
     // Service-side: This endpoint responds to the GET request sent by the client's `get lecturers/course/[string courseName]` method.
     resource function get lecturers/course/[string courseName]() returns Lecturer[]|http:NotFound {
+   // Initialize an empty array to store lecturers teaching the specified course
+    Lecturer[] lecturersTeachingCourse = [];
+
+    // Iterate through the lecturers and find those who teach the specified course
+    foreach lecturersTable[staffNumber, lecturer] {
+        if (courseName in lecturer.coursesTaught) {
+            lecturersTeachingCourse.push(lecturer);
+        }
+    }
+
+    // Check if any lecturers were found
+    if (lengthof lecturersTeachingCourse == 0) {
+        // If no lecturers found, return an HTTP NotFound response
+        return http:NotFound {message: "Course not found"};
+    }
+
+    // Return the array of lecturers teaching the specified course
+    return lecturersTeachingCourse;
+}
+
     Lecturer[] lecturersTeachingCourse = [];
 
     // Iterate through the table to find lecturers teaching the specified course

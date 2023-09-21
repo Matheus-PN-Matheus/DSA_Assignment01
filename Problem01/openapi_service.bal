@@ -37,6 +37,8 @@ service / on ep0 {
     //ADD new lecturer
     // This endpoint adds a new lecturer.
     // Service-side: This endpoint responds to the POST request sent by the client's `post lecturers` method.
+
+
     resource function post lecturers(@http:Payload Lecturer new_Lecturer) returns http:Created|http:BadRequest {
         
     // Check if the lecturer with the given staffNumber already exists
@@ -50,6 +52,7 @@ service / on ep0 {
     // Return a Created response
     return http:CREATED;
     }
+
 
 //The Following code was submitted bt Denver January -- 216013216
 # Retrieve the details of a specific lecturer by their staff number

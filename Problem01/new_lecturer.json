@@ -1,0 +1,6 @@
+{
+  "staffNumber": "L004",
+  "name": "Prof. John Doe",
+  "courses": ["Math", "Physics"],
+  "officeNumber": "O104"
+}

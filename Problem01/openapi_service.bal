@@ -37,8 +37,6 @@ service / on ep0 {
     //ADD new lecturer
     // This endpoint adds a new lecturer.
     // Service-side: This endpoint responds to the POST request sent by the client's `post lecturers` method.
-
-
     resource function post lecturers(@http:Payload Lecturer new_Lecturer) returns http:Created|http:BadRequest {
         
     // Check if the lecturer with the given staffNumber already exists
@@ -53,8 +51,6 @@ service / on ep0 {
     return http:CREATED;
     }
 
-
-//The Following code was submitted bt Denver January -- 216013216
 # Retrieve the details of a specific lecturer by their staff number
     #
     # + staffNumber - Unique staff number of the lecturer 
@@ -66,14 +62,24 @@ service / on ep0 {
     // This endpoint retrieves the details of a specific lecturer based on their staff number.
     // Service-side: This endpoint responds to the GET request sent by the client's `get lecturers/[string staffNumber]` method.
     resource function get lecturers/[string staffNumber]() returns Lecturer|http:NotFound {
+<<<<<<< HEAD
 
-    Lecturer? queriedLecturer = lecturersTable[staffNumber];
+        Lecturer? queriedLecturer = lecturersTable[staffNumber];
         if (queriedLecturer is ()) {
             return http:NOT_FOUND;
         } else {
             return queriedLecturer;
         }
-    
+    }
+=======
+>>>>>>> 2ba0ce9707241bf22c30464344ef4be76c556cf9
+
+        Lecturer? queriedLecturer = lecturersTable[staffNumber];
+        if (queriedLecturer is ()) {
+            return http:NOT_FOUND;
+        } else {
+            return queriedLecturer;
+        }
     }
     
     //The Following code was submitted bt Denver January -- 216013216
@@ -125,18 +131,6 @@ service / on ep0 {
     // This endpoint deletes a lecturer based on their staff number.
     // Service-side: This endpoint responds to the DELETE request sent by the client's `delete lecturers/[string staffNumber]` method.
     resource function delete lecturers/[string staffNumber]() returns http:NoContent|http:NotFound|http:Response {
-    // Check if the lecturer with the given staffNumber exists
-    if (!lecturersTable.hasKey(staffNumber)) {
-        // If not found, return an HTTP NotFound response
-        return http:NotFound {message: "Lecturer not found"};
-    }
-
-    // Remove the existing lecturer record from the lecturersTable
-    lecturersTable.remove(staffNumber);
-
-    // Return an HTTP NoContent response to indicate successful deletion
-    return http:NoContent;
-}
 
     // Check if the lecturer with the given staffNumber exists
      if (lecturersTable.hasKey(staffNumber)) {
@@ -163,26 +157,6 @@ service / on ep0 {
     // This endpoint retrieves lecturers teaching a specific course.
     // Service-side: This endpoint responds to the GET request sent by the client's `get lecturers/course/[string courseName]` method.
     resource function get lecturers/course/[string courseName]() returns Lecturer[]|http:NotFound {
-   // Initialize an empty array to store lecturers teaching the specified course
-    Lecturer[] lecturersTeachingCourse = [];
-
-    // Iterate through the lecturers and find those who teach the specified course
-    foreach lecturersTable[staffNumber, lecturer] {
-        if (courseName in lecturer.coursesTaught) {
-            lecturersTeachingCourse.push(lecturer);
-        }
-    }
-
-    // Check if any lecturers were found
-    if (lengthof lecturersTeachingCourse == 0) {
-        // If no lecturers found, return an HTTP NotFound response
-        return http:NotFound {message: "Course not found"};
-    }
-
-    // Return the array of lecturers teaching the specified course
-    return lecturersTeachingCourse;
-}
-
     Lecturer[] lecturersTeachingCourse = [];
 
     // Iterate through the table to find lecturers teaching the specified course
@@ -205,25 +179,7 @@ service / on ep0 {
     }
     }
     # Retrieve all the lecturers that sit in the same office
-    #
-    # + officeNumber - Office number 
-    # + return - returns can be any of following types
-    # Lecturer[] (A list of lecturers in the same office)
-    # http:NotFound (Office not found)
-    
-
-    // This endpoint retrieves all the lecturers that sit in the same office.
-    // Service-side: This endpoint responds to the GET request sent by the client's `get lecturers/office/[string officeNumber]` method.
-    resource function get lecturers/office/[string officeNumber]() returns Lecturer[]|http:NotFound {
-        Lecturer[] lecturersInSameOffice = [];
-    
-    // Iterate through the table to find lecturers in the specified office
-    foreach var lecturer in lecturersTable {
-        if (lecturer.officeNumber == officeNumber) {
-            lecturersInSameOffice.push(lecturer);
-        }
-    }
-    
+    #D
     if (lecturersInSameOffice.length() > 0) {
         return lecturersInSameOffice;
     } else {
@@ -231,3 +187,4 @@ service / on ep0 {
     }
     }
 }
+

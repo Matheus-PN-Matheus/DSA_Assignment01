@@ -20,4 +20,3 @@ service "LibraryService" on ep {
     remote function BorrowBook(BorrowBookRequest value) returns BorrowBookResponse|error {
     }
 }
-

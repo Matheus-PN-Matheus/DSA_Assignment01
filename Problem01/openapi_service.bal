@@ -62,24 +62,14 @@ service / on ep0 {
     // This endpoint retrieves the details of a specific lecturer based on their staff number.
     // Service-side: This endpoint responds to the GET request sent by the client's `get lecturers/[string staffNumber]` method.
     resource function get lecturers/[string staffNumber]() returns Lecturer|http:NotFound {
-<<<<<<< HEAD
 
-        Lecturer? queriedLecturer = lecturersTable[staffNumber];
+       Lecturer? queriedLecturer = lecturersTable[staffNumber];
         if (queriedLecturer is ()) {
             return http:NOT_FOUND;
         } else {
             return queriedLecturer;
         }
-    }
-=======
->>>>>>> 2ba0ce9707241bf22c30464344ef4be76c556cf9
-
-        Lecturer? queriedLecturer = lecturersTable[staffNumber];
-        if (queriedLecturer is ()) {
-            return http:NOT_FOUND;
-        } else {
-            return queriedLecturer;
-        }
+    
     }
     
     //The Following code was submitted bt Denver January -- 216013216
@@ -156,30 +146,16 @@ service / on ep0 {
     
     // This endpoint retrieves lecturers teaching a specific course.
     // Service-side: This endpoint responds to the GET request sent by the client's `get lecturers/course/[string courseName]` method.
-    resource function get lecturers/course/[string courseName]() returns Lecturer[]|http:NotFound {
-    Lecturer[] lecturersTeachingCourse = [];
-
-    // Iterate through the table to find lecturers teaching the specified course
+    resource function get lecturers/office/[string officeNumber]() returns Lecturer[]|http:NotFound {
+        Lecturer[] lecturersInSameOffice = [];
+    
+    // Iterate through the table to find lecturers in the specified office
     foreach var lecturer in lecturersTable {
-        string[]? coursesOpt = lecturer.courses;
-        if (coursesOpt is string[]) {  // Ensure that courses is not nil
-            foreach string course in coursesOpt {
-                if (course == courseName) {
-                    lecturersTeachingCourse[lecturersTeachingCourse.length()] = lecturer;
-                    break;  // Break inner loop as we found a matching course
-                }
-            }
+        if (lecturer.officeNumber == officeNumber) {
+            lecturersInSameOffice.push(lecturer);
         }
     }
     
-    if (lecturersTeachingCourse.length() > 0) {
-        return lecturersTeachingCourse;
-    } else {
-        return http:NOT_FOUND;
-    }
-    }
-    # Retrieve all the lecturers that sit in the same office
-    #D
     if (lecturersInSameOffice.length() > 0) {
         return lecturersInSameOffice;
     } else {
@@ -187,4 +163,6 @@ service / on ep0 {
     }
     }
 }
+
+
 

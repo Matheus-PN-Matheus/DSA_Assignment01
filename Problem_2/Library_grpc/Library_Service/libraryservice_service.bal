@@ -13,10 +13,40 @@ service "LibraryService" on ep {
     }
     remote function RemoveBook(RemoveBookRequest value) returns RemoveBookResponse|error {
     }
-    remote function ListAvailableBooks(ListAvailableBooksRequest value) returns ListAvailableBooksResponse|error {
+
+    // Lists all available books in the library.
+    // Client requests a list of all available books.
+   remote function ListAvailableBooks(ListAvailableBooksRequest value) returns ListAvailableBooksResponse|error {
+        Book[] availableBooks = [];
+        // Filtering out the books that are available.
+        foreach var book in books {
+            if (book.status) {
+                availableBooks.push(book);
+            }
+        }
+        // Sending the list of available books to the client.
+        return {books: availableBooks};
     }
-    remote function LocateBook(LocateBookRequest value) returns LocateBookResponse|error {
+ }
+    // Locates a book based on its ISBN.
+    // Client sends an ISBN to locate a specific book.
+   remote function LocateBook(LocateBookRequest value) returns LocateBookResponse|error {
+        // Searching for the book in the collection using the ISBN provided by the client.
+        foreach var book in books {
+            if (book.isbn == value.isbn) {
+                if (book.status) {
+                    // If the book is found and available, return its location to the client.
+                    return {location: book.location, status: "Available"};
+                } else {
+                    // If the book is found but not available, notify the client.
+                    return {location: "", status: "Not Available"};
+                }
+            }
+        }
+        // If the book isn't found, notify the client.
+        return {location: "", status: "Not Found"};
     }
+ }
     remote function BorrowBook(BorrowBookRequest value) returns BorrowBookResponse|error {
     }
 }

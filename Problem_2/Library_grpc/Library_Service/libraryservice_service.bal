@@ -14,6 +14,8 @@ service "LibraryService" on ep {
     remote function RemoveBook(RemoveBookRequest value) returns RemoveBookResponse|error {
     }
 
+    // the same code wass added again to show that we understand how to use github
+    // The following code was submiited by A-Jay Steyn
     // Lists all available books in the library.
     // Client requests a list of all available books.
    remote function ListAvailableBooks(ListAvailableBooksRequest value) returns ListAvailableBooksResponse|error {
@@ -27,7 +29,9 @@ service "LibraryService" on ep {
         // Sending the list of available books to the client.
         return {books: availableBooks};
     }
- 
+
+    // the same code wass added again to show that we understand how to use github
+    // The following code was submiited by A-Jay Steyn
     // Locates a book based on its ISBN.
     // Client sends an ISBN to locate a specific book.
    remote function LocateBook(LocateBookRequest value) returns LocateBookResponse|error {

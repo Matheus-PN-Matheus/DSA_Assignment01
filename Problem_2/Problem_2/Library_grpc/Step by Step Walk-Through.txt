@@ -1,0 +1,95 @@
+1. create .protofile
+
+
+2a. generate 2 service files from the .proto file we created
+using: bal grpc --mode service --input Library_proto.proto --output Library_service/
+
+
+2b. 2 files will have been generated, but one will only be a skeleton, which we fill in
+we edited Libraryservice_service.bal
+
+
+2c. after filling in the skeleton, we now test the service(before implementing client)
+We download "grpccurl"
+
+
+2.c Testing:
+i) Listing Services
+INPUT: grpcurl -proto path/to/your/service.proto -plaintext localhost:9090 list
+OUTPUT: LibraryService
+
+ii)Describing the LibraryService
+INPUT: grpcurl -proto Library_proto.proto -plaintext localhost:9090 describe LibraryService
+OUTPUT: 
+LibraryService is a service:
+service LibraryService {
+  // For librarian
+  rpc AddBook ( .AddBookRequest ) returns ( .AddBookResponse );
+  rpc BorrowBook ( .BorrowBookRequest ) returns ( .BorrowBookResponse );
+  rpc CreateUsers ( .StreamUsersRequest ) returns ( .CreateUsersResponse );
+  // For student
+  rpc ListAvailableBooks ( .ListAvailableBooksRequest ) returns ( .ListAvailableBooksResponse );
+  rpc LocateBook ( .LocateBookRequest ) returns ( .LocateBookResponse );
+  rpc RemoveBook ( .RemoveBookRequest ) returns ( .RemoveBookResponse );
+  rpc UpdateBook ( .UpdateBookRequest ) returns ( .UpdateBookResponse );
+}
+
+3. Invoking methods:
+
+i.AddBook:
+INPUT: 
+grpcurl -proto Library_proto.proto -plaintext -d "{\"title\": \"Sample Book\", \"author_1\": \"Author Name\", \"location\": \"Shelf A\", \"isbn\": \"123456\", \"status\": true}" localhost:9090 LibraryService/AddBook
+
+
+ii. LocateBook (assuming an ISBN of "123456"):
+INPUT:
+grpcurl -proto Library_proto.proto -plaintext -d "{}" localhost:9090 LibraryService/ListAvailableBooks
+
+
+iii. RemoveBook (assuming an ISBN of "123456"):
+INPUT:
+grpcurl -proto Library_proto.proto -plaintext -d "{\"isbn\": \"123456\"}" localhost:9090 LibraryService/RemoveBook
+
+iv: UpdateBook (assuming updating details for a book with ISBN "123456"):
+INPUT: grpcurl -proto Library_proto.proto -plaintext -d "{\"title\": \"Updated Book Title\", \"author_1\": \"Updated Author\", \"isbn\": \"123456\"}" localhost:9090 LibraryService/UpdateBook
+
+v: BorrowBook (assuming a user with ID "user1" is borrowing a book with ISBN "123456"):
+INPUT: 
+grpcurl -proto Library_proto.proto -plaintext -d "{\"user_id\": \"user1\", \"isbn\": \"123456\"}" localhost:9090 LibraryService/BorrowBook
+OUTPUT: 
+{
+  "status": "Borrowed"
+}
+vi: CreateUsers (to add a single user for this example):
+INPUT:
+grpcurl -proto Library_proto.proto -plaintext -d "{\"users\": [{\"id\": \"user1\", \"type\": \"STUDENT\"}]}" localhost:9090 LibraryService/CreateUsers
+
+OUTPUT:
+{
+  "status": "Success"
+}
+
+4.generate 2 service files from the .proto file we created
+using: bal grpc --mode client --input Library_proto.proto --output Library_client/
+
+4b. 2 files will have been generated, but one will only be a skeleton, which we fill in
+we edited Libraryservice_client.bal
+
+note: the client file has a main function, already partially filled in like this:
+
+[BALLERINA CODE BLOCK BEGINS]
+
+public function main() returns error? {
+AddBookRequest addBookRequest = {title: "ballerina", author_1: "ballerina", author_2: "ballerina", location: "ballerina", isbn: "ballerina", status: true};
+    AddBookResponse addBookResponse = check ep->AddBook(addBookRequest);
+    io:println(addBookResponse);
+
+    StreamUsersRequest createUsersRequest = {users: [{id: "ballerina", 'type: "STUDENT"}]};
+    CreateUsersResponse createUsersResponse = check ep->CreateUsers(createUsersRequest);
+    io:println(createUsersResponse);
+
+5. Run the Service and Run the client
+
+add book:
+grpcurl -proto C:/Users/janua/OneDrive/Documents/0.DSA/Assignment_2023/Problem_2/Library_grpc/Library_proto.proto -import-path C:/Users/janua/OneDrive/Documents/0.DSA/Assignment_2023/Problem_2/Library_grpc/ -plaintext -d "{\"title\":\"Nust Text Book\",\"author_1\":\"Mr.Quenum\",\"author_2\":\"Mrs.Nashandi\",\"location\":\"Shelf 104\",\"isbn\":\"654321\",\"status\":true}" localhost:9090 LibraryService/AddBook
+

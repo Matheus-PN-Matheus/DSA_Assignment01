@@ -1,2 +1,0 @@
-in the protocall buffer file, we use type for creating user "type", a better option would have been profile_type or user_type
-the problem only came up when implementing the library_client. type is a keyword 

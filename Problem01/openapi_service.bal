@@ -107,8 +107,8 @@ service / on ep0 {
         }
 
     
-    
-
+    // the same code wass added again to show that we understand how to use github
+    // The following code was submiited by A-Jay Steyn
 
     # Delete a lecturer's record by their staff number
     #
@@ -117,7 +117,6 @@ service / on ep0 {
     # http:NoContent (Lecturer deleted successfully)
     # http:NotFound (Lecturer not found)
     
-
     // This endpoint deletes a lecturer based on their staff number.
     // Service-side: This endpoint responds to the DELETE request sent by the client's `delete lecturers/[string staffNumber]` method.
     resource function delete lecturers/[string staffNumber]() returns http:NoContent|http:NotFound|http:Response {

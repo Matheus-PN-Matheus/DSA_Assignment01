@@ -40,11 +40,20 @@ i.AddBook:
 INPUT: 
 grpcurl -proto Library_proto.proto -plaintext -d "{\"title\": \"Sample Book\", \"author_1\": \"Author Name\", \"location\": \"Shelf A\", \"isbn\": \"123456\", \"status\": true}" localhost:9090 LibraryService/AddBook
 
+For example:
+grpcurl -proto Library_proto.proto -plaintext -d "{\"title\": \"Clean Code: A Handbook of Agile Software Craftsmanship\", \"author_1\": \"Robert C. Martin\", \"location\": \"Shelf B2\", \"isbn\": \"9780132350884\", \"status\": true}" localhost:9090 LibraryService/AddBook
+
+Example 2:
+
+grpcurl -proto Library_proto.proto -plaintext -d "{\"title\": \"Clean Code: A Handbook of Agile Software Craftsmanship\", \"author_1\": \"Robert C. Martin\", \"location\": \"Shelf B2\", \"isbn\": \"9780132350884\", \"status\": true}" localhost:9090 LibraryService/AddBook
+
+
 
 ii. LocateBook (assuming an ISBN of "123456"):
 INPUT:
 grpcurl -proto Library_proto.proto -plaintext -d "{}" localhost:9090 LibraryService/ListAvailableBooks
 
+[Continue]
 
 iii. RemoveBook (assuming an ISBN of "123456"):
 INPUT:

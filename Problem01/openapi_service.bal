@@ -52,6 +52,7 @@ service / on ep0 {
     }
 
 //The Following code was submitted bt Denver January -- 216013216
+//code block was readded using github
 # Retrieve the details of a specific lecturer by their staff number
     #
     # + staffNumber - Unique staff number of the lecturer 

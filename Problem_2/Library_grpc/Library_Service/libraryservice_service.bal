@@ -27,7 +27,7 @@ service "LibraryService" on ep {
         // Sending the list of available books to the client.
         return {books: availableBooks};
     }
- }
+ 
     // Locates a book based on its ISBN.
     // Client sends an ISBN to locate a specific book.
    remote function LocateBook(LocateBookRequest value) returns LocateBookResponse|error {
@@ -46,7 +46,19 @@ service "LibraryService" on ep {
         // If the book isn't found, notify the client.
         return {location: "", status: "Not Found"};
     }
- }
+    // Allows a user to borrow a book.
+    // Client sends a user ID and an ISBN to borrow a specific book.
     remote function BorrowBook(BorrowBookRequest value) returns BorrowBookResponse|error {
+        // Searching for the book in the collection using the ISBN provided by the client.
+        foreach var book in books {
+            if (book.isbn == value.isbn && book.status) {
+                // If the book is found and available, mark it as borrowed.
+                book.status = false;
+                // Notify the client that the book was borrowed.
+                return {status: "Borrowed"};
+            }
+        }
+        // If the book isn't available, notify the client.
+        return {status: "Not Available"};
     }
 }

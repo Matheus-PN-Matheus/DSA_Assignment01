@@ -46,7 +46,8 @@ service "LibraryService" on ep {
         // If the book isn't found, notify the client.
         return {location: "", status: "Not Found"};
     }
-    // Allows a user to borrow a book.
+   //This code was add by Denver January_216013216 
+  // Allows a user to borrow a book.
     // Client sends a user ID and an ISBN to borrow a specific book.
     remote function BorrowBook(BorrowBookRequest value) returns BorrowBookResponse|error {
         // Searching for the book in the collection using the ISBN provided by the client.
@@ -62,3 +63,5 @@ service "LibraryService" on ep {
         return {status: "Not Available"};
     }
 }
+
+

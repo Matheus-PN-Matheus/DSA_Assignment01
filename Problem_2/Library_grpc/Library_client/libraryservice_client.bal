@@ -1,34 +1,61 @@
 import ballerina/io;
+import ballerina/grpc;
 
 LibraryServiceClient ep = check new ("http://localhost:9090");
-
 public function main() returns error? {
-    AddBookRequest addBookRequest = {title: "ballerina", author_1: "ballerina", author_2: "ballerina", location: "ballerina", isbn: "ballerina", status: true};
-    AddBookResponse addBookResponse = check ep->AddBook(addBookRequest);
-    io:println(addBookResponse);
+    // Add a book using the client
+    AddBookRequest addBookReq = {
+        title: "Sample Book",
+        author_1: "Author A",
+        author_2: "Author B",
+        location: "Shelf 101",
+        isbn: "123456",
+        status: true
+    };
+    var addBookResp = ep->AddBook(addBookReq);
+    handleResponse(addBookResp);
 
-    StreamUsersRequest createUsersRequest = {users: [{id: "ballerina", 'type: "STUDENT"}]};
-    CreateUsersResponse createUsersResponse = check ep->CreateUsers(createUsersRequest);
-    io:println(createUsersResponse);
+    // Create a user
+    StreamUsersRequest createUserReq = {users: [{id: "user123", "type": "STUDENT"}]};
+    var createUserResp = ep->CreateUsers(createUserReq);
+    handleResponse(createUserResp);
 
-    UpdateBookRequest updateBookRequest = {isbn: "ballerina", title: "ballerina", author_1: "ballerina", author_2: "ballerina", location: "ballerina"};
-    UpdateBookResponse updateBookResponse = check ep->UpdateBook(updateBookRequest);
-    io:println(updateBookResponse);
+    // Update a book
+    UpdateBookRequest updateBookReq = {
+        isbn: "123456",
+        title: "Updated Book Title",
+        author_1: "Updated Author A",
+        author_2: "Updated Author B",
+        location: "Shelf 102"
+    };
+    var updateBookResp = ep->UpdateBook(updateBookReq);
+    handleResponse(updateBookResp);
 
-    RemoveBookRequest removeBookRequest = {isbn: "ballerina"};
-    RemoveBookResponse removeBookResponse = check ep->RemoveBook(removeBookRequest);
-    io:println(removeBookResponse);
+    // Remove a book
+    RemoveBookRequest removeBookReq = {isbn: "123456"};
+    var removeBookResp = ep->RemoveBook(removeBookReq);
+    handleResponse(removeBookResp);
 
-    ListAvailableBooksRequest listAvailableBooksRequest = {};
-    ListAvailableBooksResponse listAvailableBooksResponse = check ep->ListAvailableBooks(listAvailableBooksRequest);
-    io:println(listAvailableBooksResponse);
+    // List available books
+    ListAvailableBooksRequest listBooksReq = {};
+    var listBooksResp = ep->ListAvailableBooks(listBooksReq);
+    handleResponse(listBooksResp);
 
-    LocateBookRequest locateBookRequest = {isbn: "ballerina"};
-    LocateBookResponse locateBookResponse = check ep->LocateBook(locateBookRequest);
-    io:println(locateBookResponse);
+    // Locate a book
+    LocateBookRequest locateBookReq = {isbn: "123456"};
+    var locateBookResp = ep->LocateBook(locateBookReq);
+    handleResponse(locateBookResp);
 
-    BorrowBookRequest borrowBookRequest = {user_id: "ballerina", isbn: "ballerina"};
-    BorrowBookResponse borrowBookResponse = check ep->BorrowBook(borrowBookRequest);
-    io:println(borrowBookResponse);
+    // Borrow a book
+    BorrowBookRequest borrowBookReq = {user_id: "user123", isbn: "123456"};
+    var borrowBookResp = ep->BorrowBook(borrowBookReq);
+    handleResponse(borrowBookResp);
 }
 
+function handleResponse(AddBookResponse|CreateUsersResponse|UpdateBookResponse|RemoveBookResponse|ListAvailableBooksResponse|LocateBookResponse|BorrowBookResponse|grpc:Error response) {
+    if (response is grpc:Error) {
+        io:println("Error:", response.message());
+    } else {
+        io:println(response);
+    }
+}

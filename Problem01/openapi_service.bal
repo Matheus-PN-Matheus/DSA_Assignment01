@@ -50,8 +50,10 @@ service / on ep0 {
     // Return a Created response
     return http:CREATED;
     }
-
-# Retrieve the details of a specific lecturer by their staff number
+    //The Following code was submitted bt Denver January -- 216013216
+    //the same code was added again to show that we understand how to use github
+    
+    # Retrieve the details of a specific lecturer by their staff number
     #
     # + staffNumber - Unique staff number of the lecturer 
     # + return - returns can be any of following types
